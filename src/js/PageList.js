@@ -1,3 +1,13 @@
+import {
+    getHomeDefault,
+    searchGame,
+    showInfo,
+    hideInfo,
+    convertDate,
+    addCreators,
+    platformsIcons,
+    seePlatform,
+  } from "./tools";
 import { header, footer } from "./components";
 
 const PageList = (argument = '') => {
@@ -71,6 +81,7 @@ const PageList = (argument = '') => {
           let finalURL = url;
           if (argument) {
             url = "https://api.rawg.io/api/games";
+            //url = "https://api.rawg.io/api/games?key=f0770a9210e2481095acca5c9447d13c";
             finalURL = url + argument + "&page_size=30";
           }
     
@@ -147,10 +158,8 @@ const PageList = (argument = '') => {
     
         let dates = getHomeDefault();
     
-        fetchList(
-          `https://api.rawg.io/api/games${dates}&page_size=30`,
-          cleanedArgument
-        );
+        fetchList(`https://api.rawg.io/api/games${dates}&page_size=30`, cleanedArgument);
+        //fetchList(`https://api.rawg.io/api/games?key=f0770a9210e2481095acca5c9447d13c${dates}&page_size=30`, cleanedArgument);
     };
 
     const render = () => {
@@ -168,7 +177,7 @@ const PageList = (argument = '') => {
           </header>
     
     
-          <section class="game-list">
+          <section class="page-list">
             <div class="games row">...loading
             </div>
             <div id="showmore" class="d-flex justify-content-center text-center mb-3">
