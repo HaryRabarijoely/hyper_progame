@@ -1,5 +1,8 @@
 // Webpack utilise ce module Node.js pour travailler avec les dossiers.
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 // Ceci est la configuration principale de ton projet.
 // Ici, tu peux écrire les différentes options que tu souhaites, et dire à Webpack quoi faire.
@@ -20,9 +23,90 @@ module.exports = {
     publicPath: '',
   },
 
+  module: {
+      rules: [
+          {
+              // Pour le JS
+              test: /\.js$/,
+              exclude: /(node_modules)/,
+              use: {
+                  loader: 'babel-loader',
+                  options: {
+                      presets: ['@babel/preset-env'],
+                    },
+              },
+            },
+
+           {
+               // Pour le SASS
+               test: /\.(sa|sc|c)ss$/,
+               use: [
+                    {
+                        // On le met en tout premier, afin qu'il soit exécuté en dernier,
+                        // une fois que tous les changements souhaités sont appliqués à notre CSS.
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    {
+                        loader: 'css-loader', // Ce loader permet d'utiliser url() et @import dans ton CSS
+                    },
+                    {
+                        // Ensuite on utilise le loader de postCSS, qui ajoutera un minifier par exemple,
+                        // ou bien un préfixeur automatique des règles CSS (--moz par exemple)
+                        loader: 'postcss-loader',
+                    },
+                    {
+                        // En premier, on transforme le SASS en CSS :
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                        },
+                    },
+                ],
+            },
+
+            {
+                // Pour les images
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            outputPath: 'images',
+                        },
+                    },
+                ],
+            },
+
+            {
+                // Pour les fonts
+                test: /\.(woff|woff2|ttf|otf|eot)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            outputPath: 'fonts',
+                        },
+                    },
+                ],
+            },
+
+        ],
+    },
+
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'bundle.css'
+        }),
+        new Dotenv(),
+        new MomentLocalesPlugin({
+            localesToKeep: ["fr"],
+        }),
+    ],
+
   // Par défaut, le mode de Webpack est "production". En fonction de ce qui est
   // écrit ici, tu pourras appliquer différentes méthodes dans ton bundle final.
   // Pour le moment, nous avons besoin du mode "développement", car nous n'avons,
   // par exemple, pas besoin de minifier notre code.
   mode: 'development',
+
 };
