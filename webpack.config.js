@@ -10,6 +10,7 @@ module.exports = {
 
   // Ceci est le chemin vers le "point d'entrée" de ton app.
   // C'est depuis ce fichier que Webpack commencera à travailler.
+  //watch: true,
   entry: './src/js/index.js',
 
   // C'est ici qu'on dit à Webpack où mettre le fichier résultant avec tout ton JS.
@@ -99,7 +100,7 @@ module.exports = {
         }),
         new Dotenv(),
         new MomentLocalesPlugin({
-            localesToKeep: ["fr"],
+            localesToKeep: ['fr'],
         }),
     ],
 
