@@ -21,6 +21,7 @@ const getHomeDefault = () => {
 };
 
 const searchGame = () => {
+  
   let search = document.getElementById("findgame").value;
   console.log("Search for =", search);
   if (search == "") {
@@ -28,7 +29,7 @@ const searchGame = () => {
   } else {
     search = "?search=" + search;
   }
-  return GameList(search);
+  return PageList(search);
 };
 
 const showInfo = (e) => {
@@ -49,7 +50,7 @@ const addCreators = () => {
   let creators = document.querySelectorAll(".creators");
   creators.forEach((creator) => {
     let slug = creator.innerHTML;
-    fetch(`https://api.rawg.io/api/games/${slug}`)
+    fetch(`https://api.rawg.io/api/games/+${slug}`)
       .then((response) => response.json())
       .then((response) => {
         let toInsert = "";
@@ -125,7 +126,7 @@ const storeIcons = {
 const seePlatform = (e) => {
   let platformId = e.target.dataset.id;
   let platform = `?parent_platforms=${platformId}`;
-  return GameList(platform);
+  return PageList(platform);
 };
 
 const seeStudio = (e) => {
@@ -133,7 +134,7 @@ const seeStudio = (e) => {
   console.log(e.target.dataset.id);
   let studioId = e.target.dataset.id;
   let studio = `?developers=${studioId}`;
-  return GameList(studio);
+  return PageList(studio);
 };
 
 export {

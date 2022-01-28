@@ -1,13 +1,4 @@
-import {
-    getHomeDefault,
-    searchGame,
-    showInfo,
-    hideInfo,
-    convertDate,
-    addCreators,
-    platformsIcons,
-    seePlatform,
-  } from "./tools";
+import {getHomeDefault, searchGame, showInfo, hideInfo, convertDate, addCreators, platformsIcons, seePlatform} from "./tools";
 import { header, footer } from "./components";
 
 const PageList = (argument = '') => {
@@ -22,6 +13,7 @@ const PageList = (argument = '') => {
         document.querySelectorAll(".card").forEach((game) => {
             game.classList.add("not-visible");
         });
+
 
         for (let i = 0; i < 27; i++){
             if (hideShow > 8){
@@ -60,7 +52,8 @@ const PageList = (argument = '') => {
 
     const prepareFilter = () => {
         let selectors = "<option value='any'>Platform : Any</option>\n";
-        fetch("https://api.rawg.io/api/platforms/lists/parents")
+        
+        fetch(`https://api.rawg.io/api/platforms?key=${process.env.RAWG_API_KEY}`)
           .then((response) => response.json())
           .then((response) => {
               response.results.forEach((platform) => {
@@ -78,10 +71,10 @@ const PageList = (argument = '') => {
         let games = "";
     
         const fetchList = async (url, argument) => {
-          let finalURL = url;
+          let finalURL = url /*+ `&key=${process.env.RAWG_API_KEY}`;*/
           if (argument) {
             url = "https://api.rawg.io/api/games";
-            //url = "https://api.rawg.io/api/games?key=f0770a9210e2481095acca5c9447d13c";
+            
             finalURL = url + argument + "&page_size=30";
           }
     
@@ -120,7 +113,7 @@ const PageList = (argument = '') => {
                           <p>${genres}</p>
                         </div>
                         <div class="card-body">
-                          <h2><a href = "#gamedetail/${
+                          <h2><a href = "#pagedetail/${
                             game.slug
                           }"class="card-title">${game.name}</a></h2>
                         </div>
@@ -131,7 +124,7 @@ const PageList = (argument = '') => {
                     `;
                 hideShow++;
               });
-              document.querySelector(".game-list .games").innerHTML = games;
+              document.querySelector(".page-list .games").innerHTML = games;
               document.querySelectorAll(".cover").forEach((img) => {
                 img.addEventListener("mouseover", showInfo);
               });
@@ -158,8 +151,8 @@ const PageList = (argument = '') => {
     
         let dates = getHomeDefault();
     
-        fetchList(`https://api.rawg.io/api/games${dates}&page_size=30`, cleanedArgument);
-        //fetchList(`https://api.rawg.io/api/games?key=f0770a9210e2481095acca5c9447d13c${dates}&page_size=30`, cleanedArgument);
+        
+        fetchList(`https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}&page_size=30&dates=2021-03-01,2022-06-01&ordering=-metacritic`, cleanedArgument);
     };
 
     const render = () => {
